@@ -1,0 +1,97 @@
+#ifndef MSTR_API_HH
+#define MSTR_API_HH
+
+#include <string>
+#include <vector>
+#include <functional>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// Session
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+struct Session
+{
+  std::string baseUrl;
+  std::string authToken;
+  std::string cookies;
+  std::string projectId;
+  std::string username;
+  bool authenticated = false;
+};
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// Project
+// parsed JSON responses
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+struct Project 
+{
+  std::string id;
+  std::string name;
+  std::string description;
+  std::string status;
+};
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// SearchResult
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+struct SearchResult
+{
+  std::string id;
+  std::string name;
+  std::string type;
+  std::string subtype;
+  std::string dateModified;
+  std::string owner;
+};
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// LibraryItem
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+struct LibraryItem
+{
+  std::string id;
+  std::string name;
+  std::string type;
+  std::string projectId;
+  std::string dateModified;
+};
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// API functions 
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+int search(const Session& session, const std::string& name,
+  int type, int limit, std::string& response);
+int get_library(const Session& session, int limit, std::string& response);
+int get_report(const Session& session, const std::string& report_id, std::string& response);
+int get_cube(const Session& session, const std::string& cube_id,
+  const std::string& instance_id, int offset, int limit,
+  std::string& response);
+int get_dossiers(const Session& session, std::string& response);
+
+std::vector<Project> parse_projects(const std::string& json);
+std::vector<SearchResult> parse_search_results(const std::string& json);
+std::vector<LibraryItem> parse_library_items(const std::string& json);
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// object types for search
+// type 3 = report, type 55 = dossier/dashboard, type 21 = cube
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+enum MStrObjectType 
+{
+  MSTR_REPORT = 3,
+  MSTR_FILTER = 4,
+  MSTR_METRIC = 7,
+  MSTR_FOLDER = 8,
+  MSTR_PROMPT = 10,
+  MSTR_ATTRIBUTE = 12,
+  MSTR_CUBE = 21,
+  MSTR_DOCUMENT = 55,
+  MSTR_DOSSIER = 55
+};
+
+#endif
