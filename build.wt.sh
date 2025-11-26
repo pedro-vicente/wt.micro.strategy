@@ -3,7 +3,7 @@ set -e
 remote=$(git config --get remote.origin.url)
 echo "remote repository: $remote"
 if [ ! -d "ext/wt-4.12.1" ]; then
-    git -c advice.detachedHead=false clone -b 4.12-release https://github.com/emweb/wt.git ext/wt-4.12.1
+    git -c advice.detachedHead=false clone -b 4.12.1 https://github.com/emweb/wt.git ext/wt-4.12.1
     rm -rf build/wt-4.12.1
 else
     echo "ext/wt-4.12.1 already exists, skipping clone"
@@ -24,7 +24,7 @@ echo "Boost at: $path_boost"
 cmake ../../ext/wt-4.12.1 --fresh \
  -DCMAKE_INSTALL_PREFIX="$(pwd)/../../install/wt" \
  -DBOOST_PREFIX="$path_boost" \
- -DINSTALL_EXAMPLES=OFF \
+ -DBUILD_EXAMPLES=OFF \
  -DENABLE_QT5=OFF -DENABLE_QT6=OFF 
 cmake --build .  --config Debug --parallel 
 cmake --install . --config Debug
@@ -33,7 +33,7 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
 
 cmake ../../ext/wt-4.12.1 \
  -DCMAKE_INSTALL_PREFIX="$(pwd)/../../install/wt" \
- -DINSTALL_EXAMPLES=ON \
+ -DBUILD_EXAMPLES=OFF \
  -DCMAKE_CXX_FLAGS="-Wno-deprecated -Wno-deprecated-declarations -Wno-deprecated-copy" \
  -DCMAKE_BUILD_TYPE=Release \
  -DBUILD_SHARED_LIBS=OFF \
@@ -47,7 +47,7 @@ elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
 
 cmake ../../ext/wt-4.12.1  \
  -DCMAKE_INSTALL_PREFIX="$(pwd)/../../install/wt" \
- -DINSTALL_EXAMPLES=ON \
+ -DBUILD_EXAMPLES=OFF \
  -DCMAKE_BUILD_TYPE=Release \
  -DOPENSSL_ROOT_DIR=/usr \
  -DOPENSSL_CRYPTO_LIBRARY=/usr/lib/x86_64-linux-gnu/libcrypto.so \
