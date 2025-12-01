@@ -58,7 +58,7 @@ void WidgetSearch::refresh()
 
 void WidgetSearch::do_search()
 {
-  if (!app->session().authenticated || app->session().projectId.empty())
+  if (!app->session().authenticated || app->session().project_id.empty())
   {
     status_text->setText("Please select a project first");
     return;

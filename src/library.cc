@@ -75,7 +75,7 @@ void WidgetLibrary::load_library()
     const LibraryItem& item = items[idx];
     table->elementAt(row, 0)->addWidget(std::make_unique<Wt::WText>(item.name));
     table->elementAt(row, 1)->addWidget(std::make_unique<Wt::WText>(item.type));
-    table->elementAt(row, 2)->addWidget(std::make_unique<Wt::WText>(item.dateModified));
+    table->elementAt(row, 2)->addWidget(std::make_unique<Wt::WText>(item.date_modified));
 
     Wt::WText* id_text = table->elementAt(row, 3)->addWidget(
       std::make_unique<Wt::WText>(item.id));

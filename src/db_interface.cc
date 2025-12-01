@@ -124,8 +124,8 @@ private:
     std::uniform_int_distribution<> status_dist(0, 1);
     std::uniform_real_distribution<> amount_dist(100.0, 50000.0);
 
-    for (int i = 0; i < 50; i++) {
-      std::time_t t = std::time(nullptr) - (i * 86400);
+    for (int idx = 0; idx < 50; idx++) {
+      std::time_t t = std::time(nullptr) - (idx * 86400);
       std::tm* tm = std::localtime(&t);
       char date_buf[20];
       std::strftime(date_buf, sizeof(date_buf), "%Y-%m-%d", tm);

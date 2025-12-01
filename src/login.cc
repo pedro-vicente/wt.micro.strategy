@@ -97,8 +97,8 @@ void WidgetLogin::do_login()
 
   if (result == 0 && !auth_token.empty())
   {
-    app->session().baseUrl = url;
-    app->session().authToken = auth_token;
+    app->session().base_url = url;
+    app->session().auth_token = auth_token;
     app->session().cookies = cookies;
     app->session().username = user.empty() ? "Guest" : user;
     app->session().authenticated = true;
@@ -140,8 +140,8 @@ void WidgetLogin::do_guest_login()
 
   if (result == 0 && !auth_token.empty())
   {
-    app->session().baseUrl = url;
-    app->session().authToken = auth_token;
+    app->session().base_url = url;
+    app->session().auth_token = auth_token;
     app->session().cookies = cookies;
     app->session().username = "Guest";
     app->session().authenticated = true;

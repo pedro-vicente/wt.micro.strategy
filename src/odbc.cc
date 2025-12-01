@@ -404,11 +404,11 @@ void table_t::remove()
 std::string table_t::get_row_col_value(int row, const std::string& col_name)
 {
   int col_num = -1;
-  for (int c = 0; c < cols.size(); c++)
+  for (size_t idx = 0; idx < cols.size(); idx++)
   {
-    if (cols.at(c).name.compare(col_name) == 0)
+    if (cols.at(idx).name.compare(col_name) == 0)
     {
-      col_num = c;
+      col_num = static_cast<int>(idx);
       break;
     }
   }

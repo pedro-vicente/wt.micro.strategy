@@ -11,10 +11,10 @@
 
 struct Session
 {
-  std::string baseUrl;
-  std::string authToken;
+  std::string base_url;
+  std::string auth_token;
   std::string cookies;
-  std::string projectId;
+  std::string project_id;
   std::string username;
   bool authenticated = false;
 };
@@ -42,7 +42,7 @@ struct SearchResult
   std::string name;
   std::string type;
   std::string subtype;
-  std::string dateModified;
+  std::string date_modified;
   std::string owner;
 };
 
@@ -55,8 +55,8 @@ struct LibraryItem
   std::string id;
   std::string name;
   std::string type;
-  std::string projectId;
-  std::string dateModified;
+  std::string project_id;
+  std::string date_modified;
 };
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////

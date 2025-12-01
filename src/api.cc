@@ -16,10 +16,10 @@ static void build_auth_headers(std::stringstream& http, const Session& session,
 {
   http << "Host: " << host << "\r\n";
   http << "Accept: application/json\r\n";
-  http << "X-MSTR-AuthToken: " << session.authToken << "\r\n";
-  if (!session.projectId.empty())
+  http << "X-MSTR-AuthToken: " << session.auth_token << "\r\n";
+  if (!session.project_id.empty())
   {
-    http << "X-MSTR-ProjectID: " << session.projectId << "\r\n";
+    http << "X-MSTR-ProjectID: " << session.project_id << "\r\n";
   }
   if (!session.cookies.empty())
   {
@@ -61,7 +61,7 @@ int search(const Session& session, const std::string& name,
   int type, int limit, std::string& response)
 {
   std::string host, base_path;
-  parse_url(session.baseUrl, host, base_path);
+  parse_url(session.base_url, host, base_path);
 
   std::stringstream path;
   path << base_path << "/api/searches/results?";
@@ -95,7 +95,7 @@ int search(const Session& session, const std::string& name,
 int get_library(const Session& session, int limit, std::string& response)
 {
   std::string host, base_path;
-  parse_url(session.baseUrl, host, base_path);
+  parse_url(session.base_url, host, base_path);
 
   std::stringstream path;
   path << base_path << "/api/library?outputFlag=DEFAULT&limit=" << limit;
@@ -121,7 +121,7 @@ int get_report(const Session& session, const std::string& report_id,
   std::string& response)
 {
   std::string host, base_path;
-  parse_url(session.baseUrl, host, base_path);
+  parse_url(session.base_url, host, base_path);
 
   std::string path = base_path + "/api/reports/" + report_id + "/instances?limit=100";
 
@@ -148,7 +148,7 @@ int get_cube(const Session& session, const std::string& cube_id,
   std::string& response)
 {
   std::string host, base_path;
-  parse_url(session.baseUrl, host, base_path);
+  parse_url(session.base_url, host, base_path);
 
   std::stringstream path;
   path << base_path << "/api/cubes/" << cube_id << "/instances/" << instance_id;
@@ -191,9 +191,9 @@ static std::vector<std::string> extract_json_array(const std::string& json)
   bool in_string = false;
   char prev_char = 0;
 
-  for (size_t i = pos; i < json.size(); i++)
+  for (size_t idx = pos; idx < json.size(); idx++)
   {
-    char c = json[i];
+    char c = json[idx];
 
     // Handle string escaping
     if (c == '"' && prev_char != '\\')
@@ -205,7 +205,7 @@ static std::vector<std::string> extract_json_array(const std::string& json)
     {
       if (c == '{')
       {
-        if (depth == 0) start = i;
+        if (depth == 0) start = idx;
         depth++;
       }
       else if (c == '}')
@@ -213,7 +213,7 @@ static std::vector<std::string> extract_json_array(const std::string& json)
         depth--;
         if (depth == 0)
         {
-          items.push_back(json.substr(start, i - start + 1));
+          items.push_back(json.substr(start, idx - start + 1));
         }
       }
     }
@@ -269,7 +269,7 @@ std::vector<SearchResult> parse_search_results(const std::string& json)
       sr.name = extract_value(item, "name");
       sr.type = extract_value(item, "type");
       sr.subtype = extract_value(item, "subtype");
-      sr.dateModified = extract_value(item, "dateModified");
+      sr.date_modified = extract_value(item, "dateModified");
       sr.owner = extract_value(item, "owner");
       if (!sr.id.empty())
       {
@@ -290,7 +290,7 @@ std::vector<SearchResult> parse_search_results(const std::string& json)
     sr.name = extract_value(item, "name");
     sr.type = extract_value(item, "type");
     sr.subtype = extract_value(item, "subtype");
-    sr.dateModified = extract_value(item, "dateModified");
+    sr.date_modified = extract_value(item, "dateModified");
     sr.owner = extract_value(item, "owner");
     if (!sr.id.empty())
     {
@@ -317,8 +317,8 @@ std::vector<LibraryItem> parse_library_items(const std::string& json)
     li.id = extract_value(item, "id");
     li.name = extract_value(item, "name");
     li.type = extract_value(item, "type");
-    li.projectId = extract_value(item, "projectId");
-    li.dateModified = extract_value(item, "dateModified");
+    li.project_id = extract_value(item, "projectId");
+    li.date_modified = extract_value(item, "dateModified");
     if (!li.id.empty())
     {
       items_list.push_back(li);

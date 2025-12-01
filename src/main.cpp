@@ -27,12 +27,12 @@ int main(int argc, char** argv)
   }
   catch (Wt::WServer::Exception& e)
   {
-    std::cerr << "Server exception: " << e.what() << std::endl;
+    std::cerr << e.what() << std::endl;
     return 1;
   }
   catch (std::exception& e)
   {
-    std::cerr << "Exception: " << e.what() << std::endl;
+    std::cerr << e.what() << std::endl;
     return 1;
   }
 

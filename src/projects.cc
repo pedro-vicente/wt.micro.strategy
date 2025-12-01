@@ -56,7 +56,7 @@ void WidgetProjects::load_projects()
     return;
   }
 
-  std::string current_project_id = app->session().projectId;
+  std::string current_project_id = app->session().project_id;
 
   status_text->setText("Loading projects...");
   refresh_btn->setEnabled(false);
@@ -69,8 +69,8 @@ void WidgetProjects::load_projects()
   table->elementAt(0, 3)->addWidget(std::make_unique<Wt::WText>("<b>Action</b>"));
 
   std::string response;
-  int result = get_projects(app->session().baseUrl,
-    app->session().authToken,
+  int result = get_projects(app->session().base_url,
+    app->session().auth_token,
     app->session().cookies);
 
   std::ifstream file("projects.json");
@@ -147,7 +147,7 @@ void WidgetProjects::load_projects()
 
 void WidgetProjects::select_project(const std::string& project_id, const std::string& project_name)
 {
-  app->session().projectId = project_id;
+  app->session().project_id = project_id;
   status_text->setText("Running ETL for: " + project_name + "...");
   run_etl(project_id, project_name);
   load_projects();

@@ -53,7 +53,6 @@ set(HEADERS
     src/api.hh
     src/lite.hh
     src/odbc.hh
-    src/log.hh
     src/db_interface.hh
 )
 

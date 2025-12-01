@@ -242,7 +242,7 @@ void WApplicationStrategy::on_login()
 {
   show_main();
   user_info->setText("Logged in as: " + m_session.username);
-  set_status("Connected to " + m_session.baseUrl);
+  set_status("Connected to " + m_session.base_url);
   p_projects->refresh();
 }
 
@@ -252,7 +252,7 @@ void WApplicationStrategy::on_login()
 
 void WApplicationStrategy::on_logout()
 {
-  logout(m_session.baseUrl, m_session.authToken, m_session.cookies);
+  logout(m_session.base_url, m_session.auth_token, m_session.cookies);
   m_session = Session();
   show_login();
   set_status("Logged out");
