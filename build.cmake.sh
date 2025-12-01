@@ -24,7 +24,7 @@ else
     echo "asio already exists in ext/"
 fi
 
-app="strategy"
+app="wt.micro.strategy"
 
 mkdir -p build/$app
 pushd build

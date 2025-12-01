@@ -1,10 +1,9 @@
 #include "app.hh"
 #include "login.hh"
 #include "projects.hh"
-#include "search.hh"
 #include "library.hh"
-#include "report.hh"
 #include "data.hh"
+#include "metrics_view.hh"
 #include "get.hh"
 
 #include <Wt/WBreak.h>
@@ -18,7 +17,7 @@
 WApplicationStrategy::WApplicationStrategy(const Wt::WEnvironment& env)
   : WApplication(env)
 {
-  setTitle("MicroStrategy");
+  setTitle("FinMart");
 
   Wt::WCssStyleSheet& css = styleSheet();
 
@@ -47,16 +46,16 @@ WApplicationStrategy::WApplicationStrategy(const Wt::WEnvironment& env)
   css.addRule(".main-container", "padding: 20px; background: #fff; min-height: 100vh;");
   css.addRule(".navbar",
     "background: #f8f9fa; padding: 10px 20px; border-bottom: 1px solid #dee2e6;"
-    "display: flex; align-items: center; flex-wrap: wrap;");
-  css.addRule(".navbar-brand", "font-weight: bold; font-size: 1.2em; margin-right: 30px; color: #333;");
-  css.addRule(".navbar-nav", "display: flex; list-style: none; margin: 0; padding: 0;");
-  css.addRule(".navbar-nav li", "margin-right: 5px;");
+    "display: flex; align-items: center; flex-wrap: nowrap;");
+  css.addRule(".navbar-nav", "display: flex !important; list-style: none; margin: 0; padding: 0; flex-wrap: nowrap;");
+  css.addRule(".navbar-nav li", "margin-right: 5px; display: inline-block !important;");
   css.addRule(".navbar-nav a, .navbar-nav .nav-link",
     "padding: 8px 15px; text-decoration: none; color: #555; border-radius: 4px;");
   css.addRule(".navbar-nav a:hover, .navbar-nav .nav-link:hover", "background: #e9ecef;");
-  css.addRule(".navbar-nav .active a, .navbar-nav .active .nav-link", "background: #007bff; color: #fff;");
+  css.addRule(".navbar-nav .active a, .navbar-nav .active .nav-link", 
+    "background: #0d6efd; color: #fff; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.2);");
   css.addRule(".navbar-right", "margin-left: auto; display: flex; align-items: center;");
-  css.addRule(".user-info", "color: #6c757d; margin-right: 15px;");
+  css.addRule(".navbar-collapse", "display: block !important; visibility: visible !important;");
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////
   // buttons
@@ -138,6 +137,13 @@ WApplicationStrategy::WApplicationStrategy(const Wt::WEnvironment& env)
   css.addRule(".projects-view, .search-view, .library-view, .report-view, .data-view", "padding: 20px;");
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////
+  // metrics view
+  /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  css.addRule(".metrics-panel", "margin: 15px 0; padding: 15px; background: #fff; border: 1px solid #dee2e6; border-radius: 5px;");
+  css.addRule(".metrics-panel h4", "margin-top: 0; color: #1565c0; border-bottom: 1px solid #e0e0e0; padding-bottom: 10px;");
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////
   // data view
   /////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -185,8 +191,7 @@ void WApplicationStrategy::create_main_page()
   main_page->setStyleClass("main-container");
   navbar = main_page->addWidget(std::make_unique<Wt::WNavigationBar>());
   navbar->setStyleClass("navbar");
-  navbar->setTitle("MicroStrategy Demo", "/");
-  navbar->setResponsive(true);
+  navbar->setResponsive(false);
   Wt::WStackedWidget* content_stack = main_page->addWidget(std::make_unique<Wt::WStackedWidget>());
   content_stack->setStyleClass("content-area");
   menu = navbar->addMenu(std::make_unique<Wt::WMenu>(content_stack));
@@ -196,31 +201,23 @@ void WApplicationStrategy::create_main_page()
   std::unique_ptr<Wt::WMenuItem> projects_item = std::make_unique<Wt::WMenuItem>("Projects", std::unique_ptr<WidgetProjects>(p_projects));
   menu->addItem(std::move(projects_item));
 
-  p_search = new WidgetSearch(this);
-  std::unique_ptr<Wt::WMenuItem> search_item = std::make_unique<Wt::WMenuItem>("Search", std::unique_ptr<WidgetSearch>(p_search));
-  menu->addItem(std::move(search_item));
-
   p_library = new WidgetLibrary(this);
   std::unique_ptr<Wt::WMenuItem> library_item = std::make_unique<Wt::WMenuItem>("Library", std::unique_ptr<WidgetLibrary>(p_library));
   menu->addItem(std::move(library_item));
-
-  p_report = new WidgetReport(this);
-  std::unique_ptr<Wt::WMenuItem> report_item = std::make_unique<Wt::WMenuItem>("Report", std::unique_ptr<WidgetReport>(p_report));
-  report_item->setPathComponent("report");
-  Wt::WMenuItem* report_menuitem = menu->addItem(std::move(report_item));
-  report_menuitem->hide();
 
   p_data = new WidgetView(this);
   std::unique_ptr<Wt::WMenuItem> data_item = std::make_unique<Wt::WMenuItem>("Data (FinMart)", std::unique_ptr<WidgetView>(p_data));
   menu->addItem(std::move(data_item));
 
+  p_metrics = new WidgetMetrics(this);
+  std::unique_ptr<Wt::WMenuItem> metrics_item = std::make_unique<Wt::WMenuItem>("Metrics", std::unique_ptr<WidgetMetrics>(p_metrics));
+  Wt::WMenuItem* metrics_menuitem = menu->addItem(std::move(metrics_item));
+  metrics_menuitem->triggered().connect([this]() {
+    p_metrics->load_metrics();
+  });
+
   Wt::WMenu* right_menu = navbar->addMenu(std::make_unique<Wt::WMenu>(), Wt::AlignmentFlag::Right);
   right_menu->setStyleClass("navbar-nav navbar-right");
-
-  std::unique_ptr<Wt::WText> user_infoptr = std::make_unique<Wt::WText>();
-  user_info = user_infoptr.get();
-  user_info->setStyleClass("user-info");
-  navbar->addWidget(std::move(user_infoptr), Wt::AlignmentFlag::Right);
 
   std::unique_ptr<Wt::WPushButton> logout_btn_ptr = std::make_unique<Wt::WPushButton>("Logout");
   Wt::WPushButton* logout_btn = logout_btn_ptr.get();
@@ -241,7 +238,6 @@ void WApplicationStrategy::create_main_page()
 void WApplicationStrategy::on_login()
 {
   show_main();
-  user_info->setText("Logged in as: " + m_session.username);
   set_status("Connected to " + m_session.base_url);
   p_projects->refresh();
 }
@@ -286,37 +282,12 @@ void WApplicationStrategy::show_projects()
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-// show_search 
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-
-void WApplicationStrategy::show_search()
-{
-  menu->select(1);
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////
 // show_library 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void WApplicationStrategy::show_library()
 {
-  menu->select(2);
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-// show_report 
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-
-void WApplicationStrategy::show_report(const std::string& report_id, const std::string& report_name)
-{
-  p_report->load_report(report_id, report_name);
-  if (menu->count() > 3)
-  {
-    menu->itemAt(3)->show();
-    menu->itemAt(3)->setText("Report: " + report_name);
-  }
-
-  menu->select(3);
+  menu->select(1);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -345,6 +316,16 @@ void WApplicationStrategy::set_status(const std::string& message, bool is_error)
 
 void WApplicationStrategy::show_data()
 {
-  menu->select(4);  // data (FinMart) is the 5th item (index 4)
+  menu->select(2);
   p_data->load_data();
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// show_metrics 
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void WApplicationStrategy::show_metrics()
+{
+  menu->select(3);
+  p_metrics->load_metrics();
 }

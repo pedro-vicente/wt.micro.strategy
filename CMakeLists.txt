@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.28)
-project (strategy)
+project (wt.micro.strategy)
 
 message(STATUS "Source directory is " ${CMAKE_SOURCE_DIR})
 message(STATUS "Build directory is " ${CMAKE_CURRENT_BINARY_DIR})
@@ -20,43 +20,47 @@ set(CMAKE_CXX_STANDARD 17)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/ext/wt-4.12.1/src)
 include_directories(ext/asio-1.30.2/asio/include)
 
-include_directories(${CMAKE_SOURCE_DIR}/ext/sqlite)
+include_directories(${CMAKE_SOURCE_DIR}/sqlite)
 
-set(SOURCES
-    src/main.cpp
-    src/app.cc
-    src/login.cc
-    src/projects.cc
-    src/search.cc
-    src/library.cc
-    src/report.cc
-    src/data.cc
-    src/ssl_read.cc
-    src/get.cc
-    src/api.cc
-    src/lite.cc
-    src/odbc.cc
-    src/db_interface.cc
-    ext/sqlite/sqlite3.c
-)
+#//////////////////////////
+# source files
+#//////////////////////////
 
-set(HEADERS
-    src/app.hh
-    src/login.hh
-    src/projects.hh
-    src/search.hh
-    src/library.hh
-    src/report.hh
-    src/data.hh
-    src/ssl_read.hh
-    src/get.hh
-    src/api.hh
-    src/lite.hh
-    src/odbc.hh
-    src/db_interface.hh
-)
+set(src)
+set(src ${src} sqlite/sqlite3.h)
+set(src ${src} sqlite/sqlite3.c)
+set(src ${src} src/ssl_read.hh)
+set(src ${src} src/ssl_read.cc)
+set(src ${src} src/get.hh)
+set(src ${src} src/get.cc)
+set(src ${src} src/odbc.hh)
+set(src ${src} src/odbc.cc)
+set(src ${src} src/lite.hh)
+set(src ${src} src/lite.cc)
+set(src ${src} src/db_interface.cc)
+set(src ${src} src/db_interface.hh)
+set(src ${src} src/metrics.hh)
+set(src ${src} src/metrics.cc)
+set(src ${src} src/finmart.h)
+set(src ${src} src/manager.hh)
+set(src ${src} src/manager.cc)
+set(src ${src} src/login.cc)
+set(src ${src} src/login.hh)
+set(src ${src} src/projects.cc)
+set(src ${src} src/projects.hh)
+set(src ${src} src/library.cc)
+set(src ${src} src/library.hh)
+set(src ${src} src/data.cc)
+set(src ${src} src/data.hh)
+set(src ${src} src/metrics_view.cc)
+set(src ${src} src/metrics_view.hh)
+set(src ${src} src/app.hh)
+set(src ${src} src/app.cc)
+set(src ${src} src/api.cc)
+set(src ${src} src/api.hh)
+set(src ${src} src/main.cc)
 
-add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
+add_executable(${PROJECT_NAME} ${src})
 
 if (MSVC)
   set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})

@@ -12,10 +12,9 @@
 
 class WidgetLogin;
 class WidgetProjects;
-class WidgetSearch;
 class WidgetLibrary;
-class WidgetReport;
 class WidgetView;
+class WidgetMetrics;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // WApplicationStrategy 
@@ -30,10 +29,9 @@ public:
   void show_login();
   void show_main();
   void show_projects();
-  void show_search();
   void show_library();
-  void show_report(const std::string& report_id, const std::string& report_name);
   void show_data();
+  void show_metrics();
   void set_status(const std::string& message, bool is_error = false);
 
 private:
@@ -49,14 +47,12 @@ private:
   Wt::WNavigationBar* navbar;
   Wt::WMenu* menu;
   Wt::WText* status_text;
-  Wt::WText* user_info;
 
   WidgetLogin* p_login;
   WidgetProjects* p_projects;
-  WidgetSearch* p_search;
   WidgetLibrary* p_library;
-  WidgetReport* p_report;
   WidgetView* p_data;
+  WidgetMetrics* p_metrics;
 };
 
 #endif

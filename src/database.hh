@@ -5,14 +5,13 @@
 #include <vector>
 #include <map>
 #include "finmart.h"
-#include "metrics.hh"
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // DatabaseBackend
 // database backend types
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-enum class DatabaseBackend 
+enum class DatabaseBackend
 {
   SQLITE,
   SQLSERVER
@@ -33,14 +32,6 @@ public:
   virtual std::map<std::string, double> get_department_spending() = 0;
   virtual std::map<std::string, int> get_source_system_counts() = 0;
   virtual double get_total_spending() = 0;
-
-  /////////////////////////////////////////////////////////////////////////////////////////////////////
-  // financial records and metrics
-  /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-  virtual std::vector<FinancialRecord> get_financial_records() = 0;
-  virtual std::vector<FinancialRecord> get_financial_records_by_company(const std::string& company_id) = 0;
-  virtual int insert_financial_record(const FinancialRecord& record) = 0;
 
   virtual DatabaseBackend get_backend() const = 0;
   virtual std::string get_backend_name() const = 0;
