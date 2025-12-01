@@ -158,11 +158,10 @@ if(APPLE)
 endif()
 
 if (LINUX)
+  find_package(Boost REQUIRED COMPONENTS filesystem thread program_options)
   set(lib_dep ${lib_dep} ${CMAKE_CURRENT_SOURCE_DIR}/install/wt/lib/libwt.so)
   set(lib_dep ${lib_dep} ${CMAKE_CURRENT_SOURCE_DIR}/install/wt/lib/libwthttp.so)
-  set(lib_dep ${lib_dep} ${BOOST_LIB_DIRS}/libboost_filesystem-gcc13-mt-x64-1_88.a)
-  set(lib_dep ${lib_dep} ${BOOST_LIB_DIRS}/libboost_thread-gcc13-mt-x64-1_88.a)
-  set(lib_dep ${lib_dep} ${BOOST_LIB_DIRS}/libboost_program_options-gcc13-mt-x64-1_88.a)
+  set(lib_dep ${lib_dep} Boost::filesystem Boost::thread Boost::program_options)
 endif()
 
 #//////////////////////////

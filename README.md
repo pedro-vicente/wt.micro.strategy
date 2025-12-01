@@ -77,6 +77,43 @@ Create a `config.json` file in the working directory:
 - OpenSSL 3.0+
 - ODBC driver (unixODBC on Linux, built-in on Windows/macOS)
 
+### Install Boost (Linux)
+
+On Ubuntu/Debian:
+```
+sudo apt install libboost-all-dev
+```
+
+On Fedora/RHEL:
+
+```
+sudo dnf install boost-devel
+```
+
+On Windows, build from source 
+```batch
+build.boost.bat
+```
+
+
+### Instal ODBC drivers (Linux)
+
+# Install unixODBC driver manager
+```
+sudo apt update
+sudo apt install unixodbc unixodbc-dev
+```
+
+# For SQL Server
+```
+sudo apt install odbcinst
+curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+curl https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/prod.list | sudo tee /etc/apt/sources.list.d/mssql-release.list
+sudo apt update
+sudo ACCEPT_EULA=Y apt install msodbcsql18
+```
+
+
 ### Build Scripts
 
 **Linux/macOS:**
@@ -84,10 +121,6 @@ Create a `config.json` file in the working directory:
 ./build.cmake.sh
 ```
 
-**Windows:**
-```batch
-build.boost.bat
-```
 
 ## Running
 
